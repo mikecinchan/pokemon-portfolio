@@ -10,8 +10,8 @@
 1. Go to https://console.firebase.google.com/
 2. Create new project → Enable Firestore
 3. Get credentials:
-   - **Frontend**: Project Settings → Web app config
-   - **Backend**: Service Accounts → Generate private key
+   - Project Settings → General → Your apps → Web app (</>) icon
+   - Copy the firebaseConfig (used for both frontend and backend!)
 
 ### 2. Backend Setup (1 minute)
 ```bash
@@ -38,12 +38,15 @@ npm run dev
 
 ## Environment Variables Quick Reference
 
-### Backend `.env`
+### Backend `.env` (same Firebase config as frontend)
 ```env
 PORT=5000
+FIREBASE_API_KEY=your-api-key
+FIREBASE_AUTH_DOMAIN=your-project.firebaseapp.com
 FIREBASE_PROJECT_ID=your-project-id
-FIREBASE_CLIENT_EMAIL=your-email@project.iam.gserviceaccount.com
-FIREBASE_PRIVATE_KEY="-----BEGIN PRIVATE KEY-----\n...\n-----END PRIVATE KEY-----\n"
+FIREBASE_STORAGE_BUCKET=your-project.appspot.com
+FIREBASE_MESSAGING_SENDER_ID=123456789
+FIREBASE_APP_ID=1:123456789:web:abc123def456
 ```
 
 ### Frontend `.env`
@@ -56,6 +59,8 @@ VITE_FIREBASE_STORAGE_BUCKET=your-project.appspot.com
 VITE_FIREBASE_MESSAGING_SENDER_ID=123456789
 VITE_FIREBASE_APP_ID=1:123456789:web:abc123def456
 ```
+
+**Note:** Both frontend and backend use the same Firebase web configuration!
 
 ## Common Issues
 

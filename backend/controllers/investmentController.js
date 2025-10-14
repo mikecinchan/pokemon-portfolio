@@ -1,16 +1,20 @@
 const { db } = require('../services/firebase');
 const { getTokenPrice } = require('../services/dexscreener');
 
-const investmentsCollection = db.collection('investments');
-
 /**
- * Get all investments
+ * Get all investments for the authenticated user
  */
 const getAllInvestments = async (req, res) => {
   try {
-    const snapshot = await investmentsCollection.orderBy('createdAt', 'desc').get();
-    const investments = [];
+    const userId = req.userId;
 
+    const snapshot = await db
+      .collection('investments')
+      .where('userId', '==', userId)
+      .orderBy('createdAt', 'desc')
+      .get();
+
+    const investments = [];
     snapshot.forEach((doc) => {
       investments.push({
         id: doc.id,
@@ -37,7 +41,9 @@ const getAllInvestments = async (req, res) => {
 const getInvestmentById = async (req, res) => {
   try {
     const { id } = req.params;
-    const doc = await investmentsCollection.doc(id).get();
+    const userId = req.userId;
+
+    const doc = await db.collection('investments').doc(id).get();
 
     if (!doc.exists) {
       return res.status(404).json({
@@ -46,11 +52,20 @@ const getInvestmentById = async (req, res) => {
       });
     }
 
+    const data = doc.data();
+    // Verify ownership
+    if (data.userId !== userId) {
+      return res.status(403).json({
+        success: false,
+        error: 'Access denied',
+      });
+    }
+
     res.json({
       success: true,
       data: {
         id: doc.id,
-        ...doc.data(),
+        ...data,
       },
     });
   } catch (error) {
@@ -95,8 +110,9 @@ const createInvestment = async (req, res) => {
       });
     }
 
-    // Create investment document
+    // Create investment document with userId
     const investmentData = {
+      userId: req.userId,
       tokenTicker: tokenTicker.toUpperCase(),
       tokenName: tokenData.name || tokenTicker,
       tokenAmount: parseFloat(tokenAmount),
@@ -104,7 +120,7 @@ const createInvestment = async (req, res) => {
       updatedAt: new Date().toISOString(),
     };
 
-    const docRef = await investmentsCollection.add(investmentData);
+    const docRef = await db.collection('investments').add(investmentData);
 
     res.status(201).json({
       success: true,
@@ -129,13 +145,24 @@ const updateInvestment = async (req, res) => {
   try {
     const { id } = req.params;
     const { tokenTicker, tokenAmount } = req.body;
+    const userId = req.userId;
 
-    // Check if investment exists
-    const doc = await investmentsCollection.doc(id).get();
+    const docRef = db.collection('investments').doc(id);
+    const doc = await docRef.get();
+
     if (!doc.exists) {
       return res.status(404).json({
         success: false,
         error: 'Investment not found',
+      });
+    }
+
+    const docData = doc.data();
+    // Verify ownership
+    if (docData.userId !== userId) {
+      return res.status(403).json({
+        success: false,
+        error: 'Access denied',
       });
     }
 
@@ -168,10 +195,10 @@ const updateInvestment = async (req, res) => {
       }
     }
 
-    await investmentsCollection.doc(id).update(updateData);
+    await docRef.update(updateData);
 
     // Get updated document
-    const updatedDoc = await investmentsCollection.doc(id).get();
+    const updatedDoc = await docRef.get();
 
     res.json({
       success: true,
@@ -195,9 +222,11 @@ const updateInvestment = async (req, res) => {
 const deleteInvestment = async (req, res) => {
   try {
     const { id } = req.params;
+    const userId = req.userId;
 
-    // Check if investment exists
-    const doc = await investmentsCollection.doc(id).get();
+    const docRef = db.collection('investments').doc(id);
+    const doc = await docRef.get();
+
     if (!doc.exists) {
       return res.status(404).json({
         success: false,
@@ -205,7 +234,16 @@ const deleteInvestment = async (req, res) => {
       });
     }
 
-    await investmentsCollection.doc(id).delete();
+    const docData = doc.data();
+    // Verify ownership
+    if (docData.userId !== userId) {
+      return res.status(403).json({
+        success: false,
+        error: 'Access denied',
+      });
+    }
+
+    await docRef.delete();
 
     res.json({
       success: true,

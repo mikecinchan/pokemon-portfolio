@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { getCurrentUser } from './auth';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
 
@@ -8,6 +9,22 @@ const api = axios.create({
     'Content-Type': 'application/json',
   },
 });
+
+// Add authentication headers to all requests
+api.interceptors.request.use(
+  async (config) => {
+    const user = getCurrentUser();
+    if (user) {
+      const token = await user.getIdToken();
+      config.headers.Authorization = `Bearer ${token}`;
+      config.headers['x-user-id'] = user.uid;
+    }
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
+);
 
 // Investments API
 export const investmentsAPI = {

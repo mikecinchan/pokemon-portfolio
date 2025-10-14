@@ -1,4 +1,5 @@
 import { usePortfolio } from '../context/PortfolioContext';
+import { useAuth } from '../context/AuthContext';
 import PokemonEmblem from './PokemonEmblem';
 import InvestmentForm from './InvestmentForm';
 import InvestmentList from './InvestmentList';
@@ -6,12 +7,29 @@ import './Dashboard.css';
 
 const Dashboard = () => {
   const { totalValue, pokemon, levelInfo, error } = usePortfolio();
+  const { currentUser, logout } = useAuth();
+
+  const handleLogout = async () => {
+    if (window.confirm('Are you sure you want to log out?')) {
+      await logout();
+    }
+  };
 
   return (
     <div className="dashboard">
       <header className="dashboard-header">
-        <h1 className="app-title">Pokemon Portfolio Tracker</h1>
-        <p className="app-subtitle">Track your crypto investments with Pokemon!</p>
+        <div className="header-content">
+          <div>
+            <h1 className="app-title">Pokemon Portfolio Tracker</h1>
+            <p className="app-subtitle">Track your crypto investments with Pokemon!</p>
+          </div>
+          <div className="user-section">
+            <span className="user-email">{currentUser?.email}</span>
+            <button onClick={handleLogout} className="logout-button">
+              Logout
+            </button>
+          </div>
+        </div>
       </header>
 
       {error && (

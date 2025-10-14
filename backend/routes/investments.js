@@ -7,6 +7,10 @@ const {
   updateInvestment,
   deleteInvestment,
 } = require('../controllers/investmentController');
+const { authenticateUser } = require('../middleware/authMiddleware');
+
+// Apply authentication middleware to all routes
+router.use(authenticateUser);
 
 // @route   GET /api/investments
 // @desc    Get all investments
