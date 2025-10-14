@@ -1,0 +1,174 @@
+.investment-item {
+  background: white;
+  border-radius: 12px;
+  padding: 1.25rem;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s ease;
+  border: 2px solid transparent;
+}
+
+.investment-item:hover {
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
+  border-color: #667eea;
+}
+
+.investment-main {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.investment-info {
+  flex: 1;
+  min-width: 200px;
+}
+
+.token-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.5rem;
+}
+
+.token-ticker {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #333;
+}
+
+.token-name {
+  font-size: 0.9rem;
+  color: #666;
+}
+
+.investment-details {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  color: #666;
+  font-size: 0.9rem;
+}
+
+.detail-separator {
+  color: #ccc;
+}
+
+.investment-value {
+  text-align: right;
+}
+
+.value-label {
+  display: block;
+  font-size: 0.85rem;
+  color: #666;
+  margin-bottom: 0.25rem;
+}
+
+.value-amount {
+  display: block;
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #667eea;
+}
+
+.investment-actions {
+  display: flex;
+  gap: 0.75rem;
+  justify-content: flex-end;
+}
+
+.btn {
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-edit {
+  background: #f0f4ff;
+  color: #667eea;
+}
+
+.btn-edit:hover {
+  background: #e0e8ff;
+  transform: translateY(-2px);
+}
+
+.btn-danger {
+  background: #fff0f0;
+  color: #f44336;
+}
+
+.btn-danger:hover {
+  background: #ffe0e0;
+  transform: translateY(-2px);
+}
+
+.confirm-delete {
+  background: #fff5f5;
+  border-radius: 8px;
+  padding: 1rem;
+  margin-top: 0.5rem;
+}
+
+.confirm-delete p {
+  margin: 0 0 1rem 0;
+  color: #c33;
+  font-weight: 500;
+}
+
+.confirm-actions {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.btn-danger-confirm {
+  background: #f44336;
+  color: white;
+  flex: 1;
+}
+
+.btn-danger-confirm:hover:not(:disabled) {
+  background: #d32f2f;
+}
+
+.btn-cancel {
+  background: #e0e0e0;
+  color: #555;
+  flex: 1;
+}
+
+.btn-cancel:hover:not(:disabled) {
+  background: #d0d0d0;
+}
+
+.btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+@media (max-width: 768px) {
+  .investment-main {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .investment-value {
+    text-align: left;
+    width: 100%;
+  }
+
+  .investment-actions {
+    width: 100%;
+  }
+
+  .btn {
+    flex: 1;
+  }
+}
